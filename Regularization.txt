@@ -1,0 +1,64 @@
+Regularization:
+	1. Solution for overfitting.
+	2. Penalizing Model Complexity:
+		a). Avoid model complexity where possible
+		
+		b) Empirical Risk Minimization:
+			1. aims for low training error:
+				minimize: Loss(Data|Model)
+		
+		c) Structrual Risk Minimization:
+			1. aims for low training error
+			2. while balancing against complexity.
+				minimize: Loss(Data|Model) + complexity(Model)
+			Our training optimization algorithm is now a function of two terms: the loss term, which measures how well the model fits the data, and the regularization term, which measures model complexity.
+
+	Define complexity(Model):
+		1. Prefer smaller weights.
+		2. Diverging from this should incur a cost.
+		3. Can encode this idea via L2 regulaization
+			a). complexity(model) = sum of square of weights.
+			b). Penalizes really big weights.
+			c). For linear model: prefers flatter slopes.
+			d). Bayesian prior:
+				1. weights should be created around zero.
+				2. weights should be normally distributed.
+
+	We can quantify complexity using the L2 regularization formula, which defines the regularization term as the sum of the squares of all the feature weights:
+			L_2 { regularization term} = ||w||_2^2 = {w_1^2 + w_2^2 + ... + w_n^2}
+
+
+	Regularization for Simplicity: Lambda
+		Model developers tune the overall impact of the regularization term by multiplying its value by a scalar known as lambda (also called the regularization rate). That is, model developers aim to do the following:
+				minimize(Loss(Data|Model) + lambda complexity(Model))
+
+		Performing L2 regularization has the following effect on a model
+			a) Encourages weight values toward 0 (but not exactly 0)
+			b) Encourages the mean of the weights toward 0, with a normal (bell-shaped or Gaussian) distribution.
+
+		When choosing a lambda value, the goal is to strike the right balance between simplicity and training-data fit:
+			a) If your lambda value is too high, your model will be simple, but you run the risk of underfitting your data. Your model won't learn enough about the training data to make useful predictions.
+
+			b) If your lambda value is too low, your model will be more complex, and you run the risk of overfitting your data. Your model will learn too much about the particularities of the training data, and won't be able to generalize to new data.
+		The ideal value of lambda produces a model that generalizes well to new, previously unseen data. Unfortunately, that ideal value of lambda is data-dependent, so you'll need to do some tuning.
+
+
+Regularization for Sparsity:
+1. L1 Regularization:
+	a). Penalize sum of abs(weights)
+	b). Convex Problem.
+	c). Ecnourage sparsity like L2.
+
+	It drive wights to 0 while L2 drive weights to small but not to exaclty 0.
+
+	In a high-dimensional sparse vector, it would be nice to encourage weights to drop to exactly 0 where possible. A weight of exactly 0 essentially removes the corresponding feature from the model. Zeroing out the features will save RAM and may reduce noise in the model.
+
+L1 vs L2 regularization.
+	L2 and L1 penalize weights differently:
+		a) L2 penalizes weight.
+		b) L1 penalizes |weight|.
+
+Consequently, L2 and L1 have different derivatives:
+	# The derivative of L2 is 2 * weight.
+	# The derivative of L1 is k (a constant, whose value is independent of weight).
+
