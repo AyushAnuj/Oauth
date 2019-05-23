@@ -1,0 +1,52 @@
+Cleaning Data:
+	1. Scaling Feature Vector:
+		Scaling means converting floating-point feature values from their natural range (for example, 100 to 900) into a standard range (for example, 0 to 1 or -1 to +1).
+
+		If a feature set consists of only a single feature, then scaling provides little to no practical benefit. If, however, a feature set consists of multiple features, then feature scaling provides the following benefits:
+			a) Helps gradient descent converge more quickly.
+			b) Helps avoid the "NaN trap," in which one number in the model becomes a NaN (e.g., when a value exceeds the floating-point precision limit during training), and—due to math operations—every other number in the model also eventually becomes a NaN.
+			c) Helps the model learn appropriate weights for each feature. Without feature scaling, the model will pay too much attention to the features having a wider range.
+
+		Scaling tactic is to calculate the Z score of each value. The Z score relates the number of standard deviations away from the mean. In other words:
+			scaled_value = (value-mean)/stddev
+			
+		For example, given:
+			mean = 100
+			standard deviation = 20
+			original value = 130
+			then:
+
+  			scaled_value = (130 - 100) / 20
+  			scaled_value = 1.5
+		
+		Scaling with Z scores means that most scaled values will be between -3 and +3, but a few values will be a little higher or lower than that range.
+
+	2. Handling Extreme Outliers:
+		a. One way is to take Log of each value.Log scaling does a slightly better job, but there's still a significant tail of outlier values.
+			Example:
+				roomsPerPerson = log((totalRooms/population)+1)
+		b. Clip or cap the maximumValue.
+			Example:
+				roomsPerPerson = min(totalRooms/Population, 4)
+	
+	3. Binning:
+
+	4. Scrubbing:
+		In real world, many examples in data sets are unreliable due to one or more of the following:
+			a). Omitted values. For instance, a person forgot to enter a value for a house's age.
+			b). Duplicate examples. For example, a server mistakenly uploaded the same logs twice.
+			c). Bad labels. For instance, a person mislabeled a picture of an oak tree as a maple.
+			d). Bad feature values. For example, someone typed in an extra digit, or a thermometer was left out in the sun.
+
+		Detecting bad feature values or labels can be far trickier.
+
+		In addition to detecting bad individual examples, you must also detect bad data in the aggregate. Histograms are a great mechanism for visualizing your data in the aggregate. In addition, getting statistics like the following can help:
+			a). Maximum and minimum
+			b). Mean and median
+			c). Standard deviation
+
+	5. Know your data:
+		Follow these rules:
+			a) Keep in mind what you think your data should look like.
+			b) Verify that the data meets these expectations (or that you can explain why it doesn’t).
+			c) Double-check that the training data agrees with other sources (for example, dashboards).

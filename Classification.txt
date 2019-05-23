@@ -1,0 +1,103 @@
+Classification:
+Accuracy = {Number of correct predictions}\{Total number of predictions}
+	For binary classification, accuracy can also be calculated in terms of positives and negatives as follows:
+		Accuracy = {TP+TN}/{TP+TN+FP+FN}
+		Where:
+			TP: True Positive
+			TN: True Negative
+			FP: False Positive
+			FN: False Negative
+	Table:
+		TP | FP
+		-------
+		FN | TN
+
+	Accuracy alone doesn't tell the full story when you're working with a class-imbalanced data set, like this one, where there is a significant disparity between the number of positive and negative labels.
+
+	Example:
+		Of the 100 tumor examples, 91 are benign (90 TNs and 1 FP) and 9 are malignant (1 TP and 8 FNs).
+
+		Of the 91 benign tumors, the model correctly identifies 90 as benign. That's good. However, of the 9 malignant tumors, the model only correctly identifies 1 as malignant—a terrible outcome, as 8 out of 9 malignancies go undiagnosed!
+
+		Here accuracy is 91% but it is bad.
+
+	So for CLASS-IMBALANACED data set we use:
+		1. Precision:
+			What portion of positive identifications was actually correct.
+			Precision: TP / (TP+FP)
+
+			A model that produces no false positive has a precision 1.0.
+
+		2. Recall:
+			What portion of actual positive are identifies correctly.
+			Recall: TP / (TP+FN)
+	In Above example:
+		Precision = 1/1+1 = 0.5
+		Recall: 1/1+8 = 0.11
+
+
+Precision and Recall: A Tug of War
+	Improving precision typically reduces recall and vice versa.
+	F-score is a measure of test's accuracy.
+	F-score = 2 * ((precision * recall)/(precision + recall))
+
+
+
+ROC Curve:
+	Reciever Operating Characterstic Curve is a graph showing performance of a classification model at all classification thesholds. This curve plots two parameters:
+		a) True Positive Rate (TPR)
+		b) False Positive Rate (FPR)
+
+	TPR is a synonym for recall.
+		TPR = TP/(TP+FN)
+
+	FPR = FP/(FP+TN)
+
+	An ROC curve plots TPR vs. FPR at different classification thresholds.
+
+AUC: Area Under the ROC Curve
+	AUC stands for "Area under the ROC Curve." That is, AUC measures the entire two-dimensional area underneath the entire ROC curve (think integral calculus) from (0,0) to (1,1).
+
+	AUC provides an aggregate measure of performance across all possible classification thresholds. One way of interpreting AUC is as the probability that the model ranks a random positive example more highly than a random negative example.
+
+	AUC represents the probability that a random positive (green) example is positioned to the right of a random negative (red) example.
+
+	AUC ranges in value from 0 to 1. A model whose predictions are 100% wrong has an AUC of 0.0; one whose predictions are 100% correct has an AUC of 1.0.
+
+	AUC is desirable for the following two reasons:
+		1. AUC is scale-invariant. It measures how well predictions are ranked, rather than their absolute values.
+		2. AUC is classification-threshold-invariant. It measures the quality of the model's predictions irrespective of what classification threshold is chosen.
+
+	However, both these reasons come with caveats, which may limit the usefulness of AUC in certain use cases:
+		
+		1. Scale invariance is not always desirable. For example, sometimes we really do need well calibrated probability outputs, and AUC won’t tell us about that.
+
+		2. Classification-threshold invariance is not always desirable. In cases where there are wide disparities in the cost of false negatives vs. false positives, it may be critical to minimize one type of classification error. For example, when doing email spam detection, you likely want to prioritize minimizing false positives (even if that results in a significant increase of false negatives). AUC isn't a useful metric for this type of optimization.
+
+Pridiction Bias:
+	Prediction bias = {average of predictions} - {average of labels in data set}
+	
+	A significant nonzero prediction bias tells you there is a bug somewhere in your model.
+	
+	Possible root causes of prediction bias are:
+		1. Incomplete feature set
+		2. Noisy data set
+		3. Buggy pipeline
+		4. Biased training sample
+		5. Overly strong regularization
+
+	You might be tempted to correct prediction bias by post-processing the learned model—that is, by adding a calibration layer that adjusts your model's output to reduce the prediction bias. For example, if your model has +3% bias, you could add a calibration layer that lowers the mean prediction by 3%. However, adding a calibration layer is a bad idea for the following reasons:
+		1.	You're fixing the symptom rather than the cause.
+		2. You've built a more brittle system that you must now keep up to date.
+
+	A low prediction bias does not prove that your model is good. A really terrible model could have a zero prediction bias. For example, a model that just predicts the mean value for all examples would be a bad model, despite having zero bias.
+
+Bucketing and Prediction Bias:
+	Prediction bias for logistic regression only makes sense when grouping enough examples together to be able to compare a predicted value (for example, 0.392) to observed values (for example, 0.394).
+
+	You can form buckets in the following ways:
+		1. Linearly breaking up the target predictions.
+		2. Forming quantiles
+
+
+
