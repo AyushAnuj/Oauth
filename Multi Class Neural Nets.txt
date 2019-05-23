@@ -1,0 +1,29 @@
+Multi Class Neural Nets
+1. One-Vs-All Multi Class Classification:
+	Given a classification problem with N possible solutions, a one-vs.-all solution consists of N separate binary classifiers—one binary classifier for each possible outcome. During training, the model runs through a sequence of binary classifiers, training each to answer a separate classification question.
+
+	a. One ouput node for every different class we are looking for.
+	b. Sum of the output node should/must be equal to 1.
+
+	This approach is fairly reasonable when the total number of classes is small, but becomes increasingly inefficient as the number of classes rises.
+
+	Softmax is implemented through a neural network layer just before the output layer. The Softmax layer must have the same number of nodes as the output layer.
+
+Multi-Class, Single-Label Classfication:
+	a). An example may be a member of only one class.
+	b). Constraint that classes are mutually exclusive is helpful structure.
+	c). Useful to encode this in the loss.
+	d). Use one softmax loss for all possible classes.
+
+Multi Class, Multi-Label Classification:
+	a). An example may be a member of more than one class.
+	b). No additional constraints on class membership to exploit.
+	c). One logistic regression loss for each possible class.
+
+Full SoftMax:
+	a). Brute Force, calculates for all classes.
+
+Candidate Sampling:
+	a) Calculate for all the positive labels, but only for a random sample of negatives.
+	For example, if we are interested in determining whether an input image is a beagle or a bloodhound, we don't have to provide probabilities for every non-doggy example.
+

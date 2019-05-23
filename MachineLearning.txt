@@ -1,0 +1,48 @@
+MachineLearning:
+1. Label: y variable in basic linear regression.
+2. Features: These are input variables describing our data: Xi
+	a) The {X1, X2, ....., Xn} variables in basic linear regression.
+3. Unlabeled Example has {features, ?} : (x,?)
+	Used for making prediction on new data.
+4. Model maps examples to predicated labels: y^
+	Defined by internal parameters, which are learned.
+	It defines the relationship b/w features and label.
+
+Empirical Risk Minimization:
+	In supervised learning, a machine learning algorithm builds a model by examining many examples and attempting to find a model that minimizes loss; this process is called empirical risk minimization.
+
+	The Goal of traning model is to find weight and biases that have low loss on average across all examples. 
+
+Loss Function:
+	a). Squared loss or L2 Loss:
+		Loss = (observartion - prediction(x))^2
+
+Mean Suaure Error (MSE):
+	It is the average squared loss per example over the whole dataset. 
+	MSE = Sum up all squared losses for individual examples and then divide by number of examples.
+
+	This is not the best loss function for all circumstances.
+
+Reducing Loss:
+	Adjusting the bias and weight value iteratively so that the average minimum loss is at its local minimum.
+
+	The model is said to be converged when overall loss stops changing or at least changes extremely slowly.
+
+
+Gradient Descent: 
+	Gradient descent algorithm calculates the gradient of the loss curve at the starting point. The gradient of loss is equal to the derivative (slope) of the curve.
+	When there are multiple weights, the gradient is a vector of partial derivatives with respect to the weights.
+
+	Gradient Vector has both:
+		a. Direction
+		b. Magnitude.
+
+	Gradient Descent algorithm multiply the gradient by a scalar known as learning rate(sometime called step size) to determine next point. 
+
+	There's a Goldilocks learning rate for each regression problem. The Goldilocks value is related to how flat the loss function is. 
+
+	Ideal Learning rate in one dimesnion is the inverse of second derivative of f(x) at x.
+	
+	Ideal Learning rate in 2 or more dimesnion is the inverse of the Hessian (matrix of second partial derivaties).
+
+
