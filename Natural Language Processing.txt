@@ -1,0 +1,69 @@
+Natural Language Processing:
+1. Library available are:
+	a) word2vec
+	b) Nltk
+	c) GloVe
+	d) fast.ai
+	e) pytorch => torch.txt
+
+2. Vector Space Model:
+	a) Represent (embed) words in a continuous vector space where semantically similar words are mapped to nearby points ('are embedded nearby each other').
+
+	b) All methods depend in some way or another on the Distributional Hypothesis, which states that words that appear in the same contexts share semantic meaning.
+
+	The different approaches that leverage this principle can be divided into two categories: count-based methods (e.g. Latent Semantic Analysis), and predictive methods (e.g. neural probabilistic language models).
+
+	Count-based methods compute the statistics of how often some word co-occurs with its neighbor words in a large text corpus, and then map these count-statistics down to a small, dense vector for each word.
+
+	Predictive models directly try to predict a word from its neighbors in terms of learned small, dense embedding vectors (considered parameters of the model).
+
+Word2vec:
+	Word2vec is a particularly computationally-efficient predictive model for learning word embeddings from raw text. 
+	It comes in two flavors, the Continuous Bag-of-Words model (CBOW) and the Skip-Gram model.
+	
+	Algorithmically, these models are similar, except that CBOW predicts target words (e.g. 'mat') from source context words ('the cat sits on the'), while the skip-gram does the inverse and predicts source context-words from the target words.
+
+	CBOW works good in smaller dataset.
+	Skip-gram treats each context-target pair as a new observation, and this tends to do better when we have larger datasets 
+
+Skip Gram Model:
+	As an example, let's consider the dataset
+		the quick brown fox jumped over the lazy dog
+
+	For now, define 'context' as the window of words to the left and to the right of a target word. Using a window size of 1, we then have the dataset.
+		([the, brown], quick), ([quick, fox], brown), ([brown, jumped], fox), ([fox,over], jumped), ......)
+		of (context, target) paris.
+	Skip-Gram model try tp predict each context word from its target word so the task becomes to predict 'the' and 'brown' from 'quick', 'quick' and 'fox' from 'brown', etc. Therefore our dataset becomes:
+		(quick, the), (quick, brown), (brown,quick), (brown, fox), (fox, brown), (fox, jumped) .... of (input, output) pairs.
+
+
+Building the Graph:
+	embeddings = tf.Variable(tf.random_uniform([vocabulary_size, embedding_size], -1.0, 1.0))
+
+	nce_weights = tf.Variable(tf.truncated_normal([vocabulary_size, embedding_size],
+                      stddev=1.0 / math.sqrt(embedding_size)))
+	nce_biases = tf.Variable(tf.zeros([vocabulary_size]))
+
+	# Placeholders for inputs
+	train_inputs = tf.placeholder(tf.int32, shape=[batch_size])
+	train_labels = tf.placeholder(tf.int32, shape=[batch_size, 1])
+
+
+	# Compute the NCE loss, using a sample of the negative labels each time.
+	loss = tf.reduce_mean(
+	  			tf.nn.nce_loss(weights=nce_weights,
+	                 biases=nce_biases,
+	                 labels=train_labels,
+	                 inputs=embed,
+	                 num_sampled=num_sampled,
+	                 num_classes=vocabulary_size
+	                )
+	            )
+
+	# We use the SGD optimizer.
+	optimizer = tf.train.GradientDescentOptimizer(learning_rate=1.0).minimize(loss)
+
+	Train the model:
+		for inputs, labels in generate_batch(...):
+  			feed_dict = {train_inputs: inputs, train_labels: labels}
+  			_, cur_loss = session.run([optimizer, loss], feed_dict=feed_dict)

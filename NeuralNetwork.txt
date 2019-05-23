@@ -1,0 +1,59 @@
+Neural Network:
+
+	To handle a complex non linear issue, we used a neural network. 
+	Neural network usses hidden layer b/w input and output.
+	
+	To model a nonlinear problem, we can directly introduce a nonlinearity. We can pipe each hidden layer node through a nonlinear function.
+
+	The value of each node in Hidden Layer 1 is transformed by a nonlinear function before being passed on to the weighted sums of the next layer. This nonlinear function is called the activation function.
+
+	The following rectified linear unit activation function (or ReLU, for short) often works a little better than a smooth function like the sigmoid, while also being significantly easier to compute.
+		F(x) = max(0,x)
+
+
+	Neural Network:
+	1. A set of nodes, analogous to neurons, organized in layers.
+	2. A set of weights representing the connections between each neural network layer and the layer beneath it. The layer beneath may be another neural network layer, or some other kind of layer.
+	3. A set of biases, one for each node.
+	4. An activation function that transforms the output of each node in a layer. Different layers may have different activation functions.
+
+
+	BackProp:
+		1. Gradients are important.
+			If it's differentiable, we can probably learn on it.
+		2. Gradients can vanish.
+			Each additional layer can successively reduce signal vs noise.
+			ReLus are useful here.
+		3. Gradients can explode
+			Learning rates are important here.
+			Batch normalization (useful knob) can help.
+		4. ReLu layer can die
+			Keep calm and lower your learning rates.
+
+	Failure Caseof Back Propagation:
+		a) Vanishing Gradients: 
+			
+			The gradients for the lower layers (closer to the input) can become very small. In deep networks, computing these gradients can involve taking the product of many small terms.
+
+			When the gradients vanish toward 0 for the lower layers, these layers train very slowly, or not at all.
+
+			The ReLU activation function can help prevent vanishing gradients.
+
+		b) Exploding Gradients:
+
+			If the weights in a network are very large, then the gradients for the lower layers involve products of many large terms. In this case you can have exploding gradients: gradients that get too large to converge.
+
+			Batch normalization can help prevent exploding gradients, as can lowering the learning rate.
+
+		c) Dead ReLu Units:
+			Once the weighted sum for a ReLU unit falls below 0, the ReLU unit can get stuck. It outputs 0 activation, contributing nothing to the network's output, and gradients can no longer flow through it during backpropagation. With a source of gradients cut off, the input to the ReLU may not ever change enough to bring the weighted sum back above 0.
+
+			Lowering the learning rate can help keep ReLU units from dying.
+	
+
+	DropOut Regularization:
+		It works out by randomly "dropping out" unit activations in a neural network for a single gradient  step. The more dropout, the strong regularization.
+			0.0 = No dropout regulation.
+			1.0 = Drop out everything. The model learns nothing.
+			Values b/w 0.0 - 1.0 = More useful
+		
