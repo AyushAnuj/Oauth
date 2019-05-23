@@ -1,0 +1,84 @@
+Properties of a good features:
+	1. Feature value should appear with non-zero value more than a small handull of times in dataset.
+	2. Feature should have clear, obvious meaning.
+	3. Feature should not take on "magic" values.
+	4. The definition of feature shoudl not change over time.
+	5. Feature distribution should not have crazy outliers.
+
+Qualities of Good Features:
+	1. Avoid rarely used discrete feature values.
+		Example:
+			Account_type is a good feature but account_id is not.
+	2. Prefer clear and obvious meaning:
+		Example:
+			user_age:27 good
+			user_age: 93269432 BAD.
+	3. Don't mix "magic" values with actual data:
+		To work around magic values, convert the feature into two features:
+		 a). One feature holds only quality ratings never magic values.
+		 b). One features holds a boolean value indicating whether or not a quality_rating was supplied. Give this boolean feature a name like "is_quality_rating_defined".
+	
+	4. Account for upstream instability:
+		The definiton of feature shouldn't change over time. 
+		Example:
+			city_id: "br/sao_paulo" Good (We still need to convert string into a one-got vector).
+			inferred_city_cluster: "219"   BAD
+
+
+Feature Engineering:
+	It means transforming raw data into feature vector. 
+
+Mapping numeric values:
+	Integer and floating data doesn't need special encoding.
+	
+	Example:
+		RaW Data 				Feature:
+		num_rooms: 6				num_rooms_features:6.0
+
+Mapping categorical values:
+	Categorical features have a discreate set of possible values.
+	Since models cannot mulitply strings by the learned weights, we use feature engineering to convert strings to numeric values.
+
+	We can instead create a binary vector for each categorical feature in our model that represents values as follows:
+		a). For values that apply to the example, set corresponding vector elements to 1.
+		b). Set all other elements to 0
+
+	The length of this vector is equal to the number of elements in the vocabulary. This representation is called a one-hot encoding when a single value is 1, and a multi-hot encoding when multiple values are 1.
+
+	Example:
+		Lets say there are n number of streat name, then
+
+		Row Data 							Feature
+		street_name: "Marathali"			street_name_feature = [0,0,0,...,1....,0]
+
+
+	This approach effectively creates a Boolean variable for every feature value (e.g., street name). Here, if a house is on Shorebird Way then the binary value is 1 only for Shorebird Way. Thus, the model uses only the weight for Shorebird Way.
+
+	Similarly, if a house is at the corner of two streets, then two binary values are set to 1, and the model uses both their respective weights.
+
+	In case when n value is very large, then we will use Sparse Represenation in which only nonzero values are stored.
+
+
+Feature Crosses:
+	1. Produce Linearlity in non lineraity model using cross features.
+	2. Define template in form of [A*B]
+	3. Can be complex: [A*B*C*D*E]
+	4. When A and B represents Boolean Features , the resulting crosses can be extremely sparse.
+	
+	Example:
+		a) Housing market price predictor:
+			Latitude * num_bedrooms.
+		b) Tic-Tac-Toe Predictor:
+			[pos1 * pos2 * pos3 ..... * pos9]
+	Supplementing scaled linear models with feature crosses has traditionally been an efficient way to train on massive-scale data sets.
+
+Bucketized (Binned Featrures):
+	Bucketized population into 3 buckets:
+		a) bucket_0(<5000): corresponds to less populated blicks
+		b) bucket_1(5000-250000): corresponds to mid populated blicks
+		c) bucket_2(>250000): corresponds to highly populated blicks
+	Given the preceding bucket definitions, the following population vector:
+		[[10001], [42004], [2500], [18000]]
+	becomes the following bucketized feature vector:
+		[[1], [2], [0], [1]]
+
